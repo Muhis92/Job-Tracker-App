@@ -1,91 +1,81 @@
-import { useState, useEffect } from "react";
-import { Routes, Route, NavLink, useNavigate } from "react-router-dom";
+import { NavLink, Route, Routes, Navigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import AddJob from "./pages/AddJob";
 import AllJobs from "./pages/AllJobs";
 import Stats from "./pages/Stats";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import "./App.css";
 
 function App() {
-  const navigate = useNavigate();
-
-  const [jobs, setJobs] = useState(() => {
-    const savedJobs = localStorage.getItem("jobs");
-    return savedJobs ? JSON.parse(savedJobs) : [];
-  });
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [editJobId, setEditJobId] = useState(null);
-  const [jobToEdit, setJobToEdit] = useState(null);
-
-  useEffect(() => {
-    localStorage.setItem("jobs", JSON.stringify(jobs));
-  }, [jobs]);
-
-  const deleteJob = (id) => {
-    const updatedJobs = jobs.filter((job) => job.id !== id);
-    setJobs(updatedJobs);
-  };
-
-  const startEdit = (job) => {
-    setIsEditing(true);
-    setEditJobId(job.id);
-    setJobToEdit(job);
-    navigate("/add-job");
-  };
+  const { user, logout } = useAuth();
 
   return (
     <div className="app-layout">
-      <div className="sidebar">
-        <h2 className="sidebar-title">Job Tracker</h2>
+      {user && (
+        <aside className="sidebar">
+          <h2>Job Tracker</h2>
+          <p className="welcome">Hi, {user.name}</p>
 
-        <NavLink to="/" className="nav-link">
-          Dashboard
-        </NavLink>
+          <nav>
+            <NavLink to="/">Dashboard</NavLink>
+            <NavLink to="/add-job">Add Job</NavLink>
+            <NavLink to="/all-jobs">All Jobs</NavLink>
+            <NavLink to="/stats">Stats</NavLink>
+          </nav>
 
-        <NavLink to="/add-job" className="nav-link">
-          Add Job
-        </NavLink>
+          <button className="logout-btn" onClick={logout}>
+            Logout
+          </button>
+        </aside>
+      )}
 
-        <NavLink to="/all-jobs" className="nav-link">
-          All Jobs
-        </NavLink>
-
-        <NavLink to="/stats" className="nav-link">
-          Stats
-        </NavLink>
-      </div>
-
-      <div className="page-content">
+      <main className="main-content">
         <Routes>
-          <Route path="/" element={<Dashboard jobs={jobs} />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/add-job"
             element={
-              <AddJob
-                jobs={jobs}
-                setJobs={setJobs}
-                isEditing={isEditing}
-                setIsEditing={setIsEditing}
-                editJobId={editJobId}
-                setEditJobId={setEditJobId}
-                jobToEdit={jobToEdit}
-                setJobToEdit={setJobToEdit}
-              />
+              <ProtectedRoute>
+                <AddJob />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/all-jobs"
             element={
-              <AllJobs
-                jobs={jobs}
-                deleteJob={deleteJob}
-                startEdit={startEdit}
-              />
+              <ProtectedRoute>
+                <AllJobs />
+              </ProtectedRoute>
             }
           />
-          <Route path="/stats" element={<Stats jobs={jobs} />} />
+          <Route
+            path="/stats"
+            element={
+              <ProtectedRoute>
+                <Stats />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={!user ? <Login /> : <Navigate to="/" replace />}
+          />
+          <Route
+            path="/register"
+            element={!user ? <Register /> : <Navigate to="/" replace />}
+          />
         </Routes>
-      </div>
+      </main>
     </div>
   );
 }
