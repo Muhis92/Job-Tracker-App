@@ -1,25 +1,26 @@
 # Job Tracker App
 
-A modern React application to manage job applications efficiently.
+A web application built with React to help users track job applications.
 
 ## Features
+- Add, edit, and delete job applications (CRUD)
+- Filter and manage job entries
+- Responsive UI
+- Organized component structure
 
-- Add new job applications
-- Edit existing jobs
-- Delete jobs
-- Track job status (Pending, Interview, Declined)
-- Simple and clean UI
-
-## Tech Stack
-
+## Technologies
 - React
-- Vite
-- JavaScript (ES6)
+- JavaScript
+- HTML
 - CSS
 
-## How to Run
+## What I learned
+- Managing state in React
+- Working with components
+- Handling user input and forms
+- Building structured frontend applications
 
-```bash
-npm install
-npm run dev
-```
+## Future Improvements
+- Add authentication
+- Connect to backend/database
+- Add analytics dashboard
