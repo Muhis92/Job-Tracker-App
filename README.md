@@ -2,6 +2,9 @@
 
 A web application built with React to help users track job applications.
 
+## Live Demo
+https://job-tracker-l7attifky-muhis92s-projects.vercel.app/login
+
 ## Features
 - Add, edit, and delete job applications (CRUD)
 - Filter and manage job entries
